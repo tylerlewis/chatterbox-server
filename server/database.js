@@ -1,21 +1,33 @@
 var messages = {};
 
-messages.results = [];
+messages.results = [{
+  username: 'Argle',
+  text: 'Bargle',
+  roomname: 'Lobby',
+  objectId: 0,
+  createdAt: Date.now()
+}];
+
+messages.objectId = 1;
 
 messages.get = function(callback) {
   callback = callback || function() {
-    console.log(this.results + " database");
-    return this.results;
+    return messages.results;
   };
-  return callback(this.results);
+  return callback(messages.results);
 };
 
 messages.set = function(object, callback) {
-  if(this.results.length >= 100) {
-    this.results.pop();
-    this.results.unshift(object);
+  callback = callback || function(){
+    return undefined;
+  };
+  object.createdAt = Date.now();
+  object.objectId = messages.objectId++;
+  if(messages.results.length >= 100) {
+    messages.results.pop();
+    messages.results.unshift(object);
   } else {
-    this.results.unshift(object);
+    messages.results.unshift(object);
   }
   callback();
 };
